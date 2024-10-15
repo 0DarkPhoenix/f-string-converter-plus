@@ -1,0 +1,39 @@
+{
+	"name": "f-string-converter-plus",
+	"displayName": "F-String Converter +",
+	"description": "Customizable F-String converter for Python",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.94.0"
+	},
+	"icon": "images/logo.png",
+	"categories": ["Other"],
+	"activationEvents": ["onLanguage:python"],
+	"main": "./extension.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/0DarkPhoenix/i18n-tools.git"
+	},
+	"contributes": {
+		"commands": [
+			{
+				"command": "f-string-converter-plus.helloWorld",
+				"title": "Hello World"
+			}
+		]
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"pretest": "npm run lint",
+		"test": "vscode-test"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.94.0",
+		"@types/mocha": "^10.0.6",
+		"@types/node": "18.x",
+		"eslint": "^8.57.0",
+		"typescript": "^5.4.5",
+		"@vscode/test-cli": "^0.0.9",
+		"@vscode/test-electron": "^2.4.0"
+	}
+}
