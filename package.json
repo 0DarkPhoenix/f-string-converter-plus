@@ -1,24 +1,31 @@
 {
 	"name": "f-string-converter-plus",
-	"displayName": "F-String Converter +",
+	"displayName": "F-String Converter Plus",
 	"description": "Customizable F-String converter for Python",
+	"publisher": "DarkPhoenix",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.94.0"
 	},
-	"icon": "images/logo.png",
 	"categories": ["Other"],
 	"activationEvents": ["onLanguage:python"],
 	"main": "./extension.js",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/0DarkPhoenix/i18n-tools.git"
+		"url": "https://github.com/0DarkPhoenix/f-string-converter-plus.git"
 	},
 	"contributes": {
-		"commands": [
+		"commands": [],
+		"configuration": [
 			{
-				"command": "f-string-converter-plus.helloWorld",
-				"title": "Hello World"
+				"title": "F-String Converter Plus",
+				"properties": {
+					"f-string-converter-plus.ignorePatterns": {
+						"type": "array",
+						"default": [],
+						"description": "Define file patterns to ignore when converting f-strings"
+					}
+				}
 			}
 		]
 	},
