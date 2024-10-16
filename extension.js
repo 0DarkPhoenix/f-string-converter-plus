@@ -29,6 +29,12 @@ function activate(context) {
 		const position = activeEditor.selection.active;
 		const lineText = document.lineAt(position.line).text;
 
+		// Check if we're inside a docstring
+		const docstringRegex = /^(\s*)('{3}|"{3})/;
+		if (docstringRegex.test(lineText)) {
+			return; // Exit if we're in a docstring
+		}
+
 		// Optimize regex to match strings more efficiently
 		const stringRegex = /f?(['"])((?:\\\1|.)*?)\1/g;
 		let match;

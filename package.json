@@ -3,10 +3,11 @@
 	"displayName": "F-String Converter Plus",
 	"description": "Customizable F-String converter for Python",
 	"publisher": "DarkPhoenix",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"engines": {
 		"vscode": "^1.94.0"
 	},
+	"icon": "images/logo.png",
 	"categories": ["Other"],
 	"activationEvents": ["onLanguage:python"],
 	"main": "./extension.js",

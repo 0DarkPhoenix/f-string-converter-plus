@@ -1,9 +1,10 @@
-# Change Log
+## [0.0.2] - 2024-10-16
+### Added
+- Logo
+- Readme
 
-All notable changes to the "f-string-converter-plus" extension will be documented in this file.
+### Fixed
+- Fixed f-string being converted inside of a docstring
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+## [0.0.1] - 2024-10-15
+### Initial release
