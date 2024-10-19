@@ -37,11 +37,11 @@ function activate(context) {
 		// Check if we're inside a docstring
 		const docstringRegex = /^(\s*)('{3}|"{3})/;
 		if (docstringRegex.test(lineText)) {
-			return; // Exit if we're in a docstring
+			return;
 		}
 
 		// Optimize regex to match strings more efficiently
-		const stringRegex = /f?(['"])((?:\\\1|.)*?)\1/g;
+		const stringRegex = /([a-zA-Z])?(['"])((?:\\\2|.)*?)\2/g;
 		let match;
 
 		while ((match = stringRegex.exec(lineText)) !== null) {
@@ -50,21 +50,26 @@ function activate(context) {
 			if (position.character > start && position.character < end) {
 				const stringContent = match[0];
 				const hasPlaceholders = /\{.*?\}/.test(stringContent);
-				const startsWithF = stringContent.startsWith("f");
+				const prefix = match[1] || "";
 
-				if (hasPlaceholders !== startsWithF) {
+				if (hasPlaceholders && prefix !== "f") {
 					activeEditor.edit(
 						(editBuilder) => {
-							if (hasPlaceholders) {
+							if (!prefix) {
 								editBuilder.insert(new vscode.Position(position.line, start), "f");
-							} else {
-								editBuilder.delete(
-									new vscode.Range(
-										new vscode.Position(position.line, start),
-										new vscode.Position(position.line, start + 1),
-									),
-								);
 							}
+						},
+						{ undoStopBefore: false, undoStopAfter: false },
+					);
+				} else if (!hasPlaceholders && prefix === "f") {
+					activeEditor.edit(
+						(editBuilder) => {
+							editBuilder.delete(
+								new vscode.Range(
+									new vscode.Position(position.line, start),
+									new vscode.Position(position.line, start + 1),
+								),
+							);
 						},
 						{ undoStopBefore: false, undoStopAfter: false },
 					);

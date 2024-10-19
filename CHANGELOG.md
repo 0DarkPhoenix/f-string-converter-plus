@@ -1,3 +1,10 @@
+## [0.0.4] - 2024-10-19
+### Changed
+- Replaced poor quality logo with a better one
+
+### Fixed
+- Fixed f being placed incorrectly before a string when an r (raw string) or b (bytes string) prefix was present
+
 ## [0.0.3] - 2024-10-17
 ### Changed
 - Small saturation change to logo
