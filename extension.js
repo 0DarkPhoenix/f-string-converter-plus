@@ -20,6 +20,11 @@ function activate(context) {
 		}
 
 		const document = activeEditor.document;
+
+		if (document.languageId !== "python") {
+			return;
+		}
+
 		const filePath = document.fileName;
 
 		if (shouldIgnoreFile(filePath)) {
