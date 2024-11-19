@@ -1,3 +1,7 @@
+## [0.1.0] - 2024-11-19
+### Fixed
+- Fixed an issue where an ignore pattern for a folder wouldn't work
+
 ## [0.0.4] - 2024-10-19
 ### Changed
 - Replaced poor quality logo with a better one

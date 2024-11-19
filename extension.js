@@ -7,10 +7,16 @@ function activate(context) {
 	let ignorePatterns = config.get("ignorePatterns", []);
 
 	function shouldIgnoreFile(filePath) {
+		const normalizedPath = filePath.replace(/\\/g, "/");
+
 		return ignorePatterns.some((pattern) => {
-			// Add $ to the end of the pattern if it's not already there
-			const adjustedPattern = pattern.endsWith("$") ? pattern : `${pattern}$`;
-			return new RegExp(adjustedPattern).test(filePath);
+			// Convert glob-style pattern to RegExp
+			const regexPattern = pattern
+				.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") // Escape special RegExp chars
+				.replace(/\\\*/g, ".*") // Convert * back to .* for wildcards
+				.replace(/\\\//g, "\\/"); // Handle path separators
+
+			return new RegExp(regexPattern).test(normalizedPath);
 		});
 	}
 
@@ -122,10 +128,6 @@ function activate(context) {
 		context.subscriptions,
 	);
 }
-
-function deactivate() {}
-
 module.exports = {
 	activate,
-	deactivate,
 };
