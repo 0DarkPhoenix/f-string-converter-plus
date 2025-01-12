@@ -1,3 +1,7 @@
+## [0.2.0] - 2025-01-12
+### Changed
+- Changed the logic of determining when a string is an f-string to a stack based approach
+
 ## [0.1.0] - 2024-11-19
 ### Fixed
 - Fixed an issue where an ignore pattern for a folder wouldn't work

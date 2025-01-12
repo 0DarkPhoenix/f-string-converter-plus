@@ -20,54 +20,59 @@ function activate(context) {
 		});
 	}
 
-	function updateFString() {
+	function updateFstring() {
 		if (!activeEditor) {
 			return;
 		}
 
 		const document = activeEditor.document;
-
-		if (document.languageId !== "python") {
-			return;
-		}
-
-		const filePath = document.fileName;
-
-		if (shouldIgnoreFile(filePath)) {
-			return;
-		}
-
 		const position = activeEditor.selection.active;
 		const lineText = document.lineAt(position.line).text;
 
-		// Check if we're inside a docstring
-		const docstringRegex = /^(\s*)('{3}|"{3})/;
-		if (docstringRegex.test(lineText)) {
-			return;
-		}
-
-		// Optimize regex to match strings more efficiently
 		const stringRegex = /([a-zA-Z])?(['"])((?:\\\2|.)*?)\2/g;
 		let match;
 
 		while ((match = stringRegex.exec(lineText)) !== null) {
 			const start = match.index;
 			const end = stringRegex.lastIndex;
-			if (position.character > start && position.character < end) {
-				const stringContent = match[0];
-				const hasPlaceholders = /\{.*?\}/.test(stringContent);
-				const prefix = match[1] || "";
 
-				if (hasPlaceholders && prefix !== "f") {
+			if (position.character >= start && position.character <= end) {
+				const stringPrefix = match[1] || "";
+				const stringContent = match[3];
+
+				// Simplified placeholder detection
+				let hasPlaceholder = false;
+				let bracketDepth = 0;
+
+				for (let i = 0; i < stringContent.length; i++) {
+					const char = stringContent[i];
+
+					if (char === "{") {
+						// Check if it's not an escaped bracket
+						if (i === 0 || stringContent[i - 1] !== "{") {
+							bracketDepth++;
+						}
+					} else if (char === "}") {
+						// Check if it's not an escaped bracket
+						if (i === 0 || stringContent[i - 1] !== "}") {
+							bracketDepth--;
+							if (bracketDepth === 0) {
+								hasPlaceholder = true;
+							}
+						}
+					}
+				}
+
+				if (hasPlaceholder && stringPrefix !== "f") {
 					activeEditor.edit(
 						(editBuilder) => {
-							if (!prefix) {
+							if (!stringPrefix) {
 								editBuilder.insert(new vscode.Position(position.line, start), "f");
 							}
 						},
 						{ undoStopBefore: false, undoStopAfter: false },
 					);
-				} else if (!hasPlaceholders && prefix === "f") {
+				} else if (!hasPlaceholder && stringPrefix === "f") {
 					activeEditor.edit(
 						(editBuilder) => {
 							editBuilder.delete(
@@ -84,23 +89,22 @@ function activate(context) {
 			}
 		}
 	}
-
-	function triggerUpdateFString() {
+	function triggerUpdateFstring() {
 		if (timeout) {
 			clearTimeout(timeout);
 		}
-		timeout = setTimeout(updateFString, 5);
+		timeout = setTimeout(updateFstring, 5);
 	}
 
 	if (activeEditor) {
-		triggerUpdateFString();
+		triggerUpdateFstring();
 	}
 
 	vscode.window.onDidChangeActiveTextEditor(
 		(editor) => {
 			activeEditor = editor;
 			if (editor) {
-				triggerUpdateFString();
+				triggerUpdateFstring();
 			}
 		},
 		null,
@@ -110,7 +114,7 @@ function activate(context) {
 	vscode.workspace.onDidChangeTextDocument(
 		(event) => {
 			if (activeEditor && event.document === activeEditor.document) {
-				triggerUpdateFString();
+				triggerUpdateFstring();
 			}
 		},
 		null,
