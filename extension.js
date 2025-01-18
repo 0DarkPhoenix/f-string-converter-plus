@@ -29,66 +29,91 @@ function activate(context) {
 		const position = activeEditor.selection.active;
 		const lineText = document.lineAt(position.line).text;
 
-		const stringRegex = /([a-zA-Z])?(['"])((?:\\\2|.)*?)\2/g;
-		let match;
+		let left = 0;
+		let right = lineText.length - 1;
 
-		while ((match = stringRegex.exec(lineText)) !== null) {
-			const start = match.index;
-			const end = stringRegex.lastIndex;
+		while (left < right) {
+			// Skip any whitespace or other characters
+			while (left < right && lineText[left] !== '"' && lineText[left] !== "'") {
+				left++;
+			}
+			while (right > left && lineText[right] !== '"' && lineText[right] !== "'") {
+				right--;
+			}
 
-			if (position.character >= start && position.character <= end) {
-				const stringPrefix = match[1] || "";
-				const stringContent = match[3];
+			if (
+				lineText[left] === lineText[right] &&
+				(lineText[left] === '"' || lineText[left] === "'")
+			) {
+				const hasPrefix = left > 0 && lineText[left - 1] === "f";
+				let braceCount = 0;
+				let hasValidBraces = false;
 
-				// Simplified placeholder detection
-				let hasPlaceholder = false;
-				let bracketDepth = 0;
+				for (let i = left + 1; i < right; i++) {
+					const char = lineText[i];
+					const nextChar = lineText[i + 1];
 
-				for (let i = 0; i < stringContent.length; i++) {
-					const char = stringContent[i];
+					// Handle escaped braces first
+					if (char === "{" && nextChar === "{") {
+						i++;
+						continue;
+					}
+					if (char === "}" && nextChar === "}") {
+						i++;
+						continue;
+					}
 
+					// Handle regular braces
 					if (char === "{") {
-						// Check if it's not an escaped bracket
-						if (i === 0 || stringContent[i - 1] !== "{") {
-							bracketDepth++;
+						if (braceCount === 0) {
+							hasValidBraces = false;
 						}
+						braceCount++;
 					} else if (char === "}") {
-						// Check if it's not an escaped bracket
-						if (i === 0 || stringContent[i - 1] !== "}") {
-							bracketDepth--;
-							if (bracketDepth === 0) {
-								hasPlaceholder = true;
-							}
+						braceCount--;
+						if (braceCount === 0) {
+							hasValidBraces = true;
 						}
 					}
 				}
 
-				if (hasPlaceholder && stringPrefix !== "f") {
+				if (hasValidBraces && !hasPrefix) {
 					activeEditor.edit(
 						(editBuilder) => {
-							if (!stringPrefix) {
-								editBuilder.insert(new vscode.Position(position.line, start), "f");
-							}
+							editBuilder.insert(new vscode.Position(position.line, left), "f");
 						},
-						{ undoStopBefore: false, undoStopAfter: false },
+						{
+							undoStopBefore: false,
+							undoStopAfter: false,
+						},
 					);
-				} else if (!hasPlaceholder && stringPrefix === "f") {
+				} else if (!hasValidBraces && hasPrefix) {
 					activeEditor.edit(
 						(editBuilder) => {
 							editBuilder.delete(
 								new vscode.Range(
-									new vscode.Position(position.line, start),
-									new vscode.Position(position.line, start + 1),
+									new vscode.Position(position.line, left - 1),
+									new vscode.Position(position.line, left),
 								),
 							);
 						},
-						{ undoStopBefore: false, undoStopAfter: false },
+						{
+							undoStopBefore: false,
+							undoStopAfter: false,
+						},
 					);
 				}
-				break;
+				return;
+			}
+
+			if (position.character - left > right - position.character) {
+				left++;
+			} else {
+				right--;
 			}
 		}
 	}
+
 	function triggerUpdateFstring() {
 		if (timeout) {
 			clearTimeout(timeout);

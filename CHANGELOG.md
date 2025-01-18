@@ -1,3 +1,7 @@
+## [0.3.0] - 2025-01-18
+### Changed
+- Changed the logic of determining when a string is an f-string to a two-pointer technique approach to allow more unique cases within the brackets without incorrectly removing the f prefix
+
 ## [0.2.0] - 2025-01-12
 ### Changed
 - Changed the logic of determining when a string is an f-string to a stack based approach
