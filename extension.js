@@ -26,6 +26,12 @@ function activate(context) {
 		}
 
 		const document = activeEditor.document;
+
+		// Return early when the document is not a Python file
+		if (document.languageId !== "python") {
+			return;
+		}
+
 		const position = activeEditor.selection.active;
 		const lineText = document.lineAt(position.line).text;
 

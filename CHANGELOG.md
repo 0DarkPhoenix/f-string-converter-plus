@@ -1,3 +1,7 @@
+## [0.3.1] - 2025-01-19
+### Fixed
+- Fixed an issue where the extension would convert f-strings in a file that wasn't a Python file
+
 ## [0.3.0] - 2025-01-18
 ### Changed
 - Changed the logic of determining when a string is an f-string to a two-pointer technique approach to allow more unique cases within the brackets without incorrectly removing the f prefix
