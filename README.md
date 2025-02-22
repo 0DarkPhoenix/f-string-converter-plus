@@ -29,6 +29,7 @@ You can configure the extension to ignore specific files or patterns by updating
 This extension contributes the following settings:
 
 - `f-string-converter-plus.ignorePatterns`: Define file patterns to ignore when converting f-strings (Default: `[]`).
+- `f-string-converter-plus.supportSameTypeOfQuotes`: Change the logic of converting f-strings to an experimental approach which allows the same type of quotes to be used inside of the f-string (like `f"{""}"` or `f'{''}'`) (Default: `false`)
 
 ## Known Issues
 
