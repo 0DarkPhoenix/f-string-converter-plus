@@ -1,3 +1,7 @@
+## [0.4.0] - 2025-02-22
+### Added
+- Added a new setting where you can enable different logic for converting f-strings which supports same type of quotes inside of the brackets. This setting is off by default, because this approach is experimental and may not work correctly for all cases.
+
 ## [0.3.1] - 2025-01-19
 ### Fixed
 - Fixed an issue where the extension would convert f-strings in a file that wasn't a Python file

@@ -3,7 +3,7 @@
 	"displayName": "F-String Converter Plus",
 	"description": "Customizable F-String converter for Python",
 	"publisher": "DarkPhoenix",
-	"version": "0.3.1",
+	"version": "0.4.0",
 	"engines": {
 		"vscode": "^1.94.0"
 	},
@@ -25,6 +25,11 @@
 						"type": "array",
 						"default": [],
 						"description": "Define file patterns to ignore when converting f-strings"
+					},
+					"f-string-converter-plus.supportSameTypeOfQuotes": {
+						"type": "boolean",
+						"default": false,
+						"description": "Support the same type of quotes in f-strings. \nThis setting changes the logic used for converting f-strings to a more experimental version, which allows the same type of quotes to be used inside of an f-string. \nIf you don't need this functionality, it is highly recommended to keep this setting disabled. \n\nExamples:\nf\"{\"\"}\"\nf'{''}'"
 					}
 				}
 			}
