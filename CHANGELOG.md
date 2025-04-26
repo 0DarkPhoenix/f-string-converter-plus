@@ -1,3 +1,7 @@
+## [0.4.2] - 2025-04-26
+### Fixed
+- Fixed an issue where the ignore patterns didn't work
+
 ## [0.4.1] - 2025-02-22
 ### Changed
 - Updated Readme
